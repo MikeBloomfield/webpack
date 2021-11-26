@@ -10,14 +10,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
     mode: 'development',
     context: path.resolve(__dirname, 'src'),
-    entry: {                                                    
-        bundle:'./scripts/index.js',
-    },    
+    entry: {
+        bundle: './scripts/index.js',
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].[contenthash].js',
         assetModuleFilename: 'assets/[hash][ext][query]',
-        clean: true,   
+        clean: true,
     },
     devtool: 'source-map',
     plugins: [
@@ -32,18 +32,18 @@ module.exports = {
     module: {
         rules: [
             {
-                test:/\.html$/i,
+                test: /\.html$/i,
                 use: ['html-loader']
             },
             {
-                test:/\.(sc|sa|c)ss$/i,
-                use: [MiniCssExtractPlugin.loader, 'css-loader','postcss-loader','sass-loader']
+                test: /\.(sc|sa|c)ss$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
             },
             // {
-            //     test:/\.(jpg|jpeg|png|svg|gif)$/i,
+            //     test: /\.(jpg|jpeg|png|svg|gif)$/i,
             //     loader: 'file-loader',
             //     options: {
-            //     name: '[path][name].[ext]',
+            //         name: '[path][name].[ext]',
             //     },
             // },
             // {
@@ -52,7 +52,7 @@ module.exports = {
             //         {
             //             loader: 'file-loader',
             //             options: {
-            //             name: '[path][name].[ext]',
+            //                 name: '[path][name].[ext]',
             //             },
             //         }
             //     ]
@@ -64,12 +64,12 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                        presets: ['@babel/preset-env'],
-                        filename: '[path][name].[ext]',
+                            presets: ['@babel/preset-env'],
+                            filename: '[path][name].[ext]',
                         },
                     }
                 ]
             },
         ]
     }
-}  
+}
