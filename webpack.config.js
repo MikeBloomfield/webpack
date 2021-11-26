@@ -1,6 +1,5 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 
@@ -12,47 +11,62 @@ module.exports = {
     mode: 'development',
     context: path.resolve(__dirname, 'src'),
     entry: {                                                    
-        bundle:'./index.js',
+        bundle:'./scripts/index.js',
     },    
     output: {
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist')    
+        assetModuleFilename: 'assets/[hash][ext][query]',
+        clean: true,   
     },
+    devtool: 'source-map',
     plugins: [
         new HTMLWebpackPlugin({
-            template: './index.html'
+            filename: 'index.html',
+            template: './index.html',
         }),
-        new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
             filename: "css/[name].[contenthash].css"
         })
     ],
     module: {
         rules: [
+            {
+                test:/\.html$/i,
+                use: ['html-loader']
+            },
+            {
+                test:/\.(sc|sa|c)ss$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader','postcss-loader','sass-loader']
+            },
             // {
-            //     test:/\.html$/,
-            //     use: ['html-loader']
+            //     test:/\.(jpg|jpeg|png|svg|gif)$/i,
+            //     loader: 'file-loader',
+            //     options: {
+            //     name: '[path][name].[ext]',
+            //     },
+            // },
+            // {
+            //     test: /\.(woff2?|eot|ttf|otf)$/i,
+            //     use: [
+            //         {
+            //             loader: 'file-loader',
+            //             options: {
+            //             name: '[path][name].[ext]',
+            //             },
+            //         }
+            //     ]
             // },
             {
-                test:/\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
-            {
-                test:/\.(jpg|jpeg|png|svg|gif)$/i,
-                loader: 'file-loader',
-                options: {
-                  name: '[path][name].[ext]',
-                },
-            },
-            {
-                test: /.(woff|woff2|eot|ttf|otf)$/i,
+                test: /\.m?js$/i,
+                exclude: /node_modules/,
                 use: [
                     {
-                        loader: 'file-loader',
+                        loader: 'babel-loader',
                         options: {
-                            name: '[name].[ext]',
-                            outputPath: 'fonts/'
-                        }
+                        presets: ['@babel/preset-env'],
+                        filename: '[path][name].[ext]',
+                        },
                     }
                 ]
             },

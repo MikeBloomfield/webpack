@@ -2,3 +2,9 @@
     font-family: "Roboto" ;
     src: url("../assets/fonts/Roboto-Black.ttf") format("truetype") ;
 }
+
+$fz: 180px;
+
+.lol {
+    font-size: $fz;
+}
