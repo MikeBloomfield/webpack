@@ -2,12 +2,3 @@
 
 
 
-.lol {
-    color:blue;
-    background-image: url(../assets/images/crash.jpg);
-    background-size: cover;
-    height: 200px;
-    width: 300px;
-    margin: 0 auto;
-    font-family: "Roboto";
-}
