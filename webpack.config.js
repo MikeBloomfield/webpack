@@ -1,7 +1,7 @@
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 
 let mode = 'development'
 if (process.env.NODE_ENV === 'production') {
@@ -17,8 +17,8 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[contenthash].js',
-        assetModuleFilename: 'assets/[hash][ext][query]',
+        filename: 'js/[name].[contenthash].js',
+        assetModuleFilename: '[path][hash][ext][query]',
         clean: true,
     },
     devtool: 'source-map',
@@ -29,8 +29,25 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].[contenthash].css"
-        })
+        }),
     ],
+    optimization: {
+        minimizer: [
+          new ImageMinimizerPlugin({
+            minimizer: {
+              implementation: ImageMinimizerPlugin.imageminMinify,
+              options: {
+                plugins: [
+                    "imagemin-gifsicle",
+                    "imagemin-mozjpeg",
+                    "imagemin-pngquant",
+                    "imagemin-svgo",
+                  ],
+              },
+            },
+          }),
+        ],
+      },
     module: {
         rules: [
             {
@@ -45,24 +62,6 @@ module.exports = {
                      'postcss-loader', 
                      'sass-loader']
             },
-            // {
-            //     test: /\.(jpg|jpeg|png|svg|gif)$/i,
-            //     loader: 'file-loader',
-            //     options: {
-            //         name: '[path][name].[ext]',
-            //     },
-            // },
-            // {
-            //     test: /\.(woff2?|eot|ttf|otf)$/i,
-            //     use: [
-            //         {
-            //             loader: 'file-loader',
-            //             options: {
-            //                 name: '[path][name].[ext]',
-            //             },
-            //         }
-            //     ]
-            // },
             {
                 test: /\.m?js$/i,
                 exclude: /node_modules/,
