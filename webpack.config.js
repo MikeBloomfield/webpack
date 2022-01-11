@@ -26,6 +26,7 @@ module.exports = {
         new HTMLWebpackPlugin({
             filename: 'index.html',
             template: './index.html',
+            inject: 'body',
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].[contenthash].css"
