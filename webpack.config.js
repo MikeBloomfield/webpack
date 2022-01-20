@@ -2,6 +2,7 @@ const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 let mode = 'development'
 if (process.env.NODE_ENV === 'production') {
@@ -21,12 +22,12 @@ module.exports = {
         assetModuleFilename: '[path][hash][ext][query]',
         clean: true,
     },
-    devtool: 'source-map',
     plugins: [
         new HTMLWebpackPlugin({
             filename: 'index.html',
             template: './index.html',
             inject: 'body',
+            minify: false,
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].[contenthash].css"
@@ -34,34 +35,40 @@ module.exports = {
     ],
     optimization: {
         minimizer: [
-          new ImageMinimizerPlugin({
-            minimizer: {
-              implementation: ImageMinimizerPlugin.imageminMinify,
-              options: {
-                plugins: [
-                    "imagemin-gifsicle",
-                    "imagemin-mozjpeg",
-                    "imagemin-pngquant",
-                    "imagemin-svgo",
-                  ],
-              },
-            },
-          }),
+            new TerserPlugin({
+                test: /\.js(\?.*)?$/i,
+            }),
+            new ImageMinimizerPlugin({
+                minimizer: {
+                    implementation: ImageMinimizerPlugin.imageminMinify,
+                    options: {
+                        plugins: [
+                            "imagemin-gifsicle",
+                            "imagemin-mozjpeg",
+                            "imagemin-pngquant",
+                            "imagemin-svgo",
+                        ],
+                    },
+                },
+            }),
         ],
-      },
+    },
     module: {
         rules: [
             {
                 test: /\.html$/i,
-                use: ['html-loader']
-            },
+                loader: "html-loader",
+                options: {
+                  minimize: false,
+                },
+              },
             {
                 test: /\.(sc|sa|c)ss$/i,
                 use: [
-                    (mode === 'development') ? 'style-loader': MiniCssExtractPlugin.loader,
-                     'css-loader', 
-                     'postcss-loader', 
-                     'sass-loader']
+                    (mode === 'development') ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader']
             },
             {
                 test: /\.m?js$/i,
